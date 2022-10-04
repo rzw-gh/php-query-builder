@@ -581,7 +581,7 @@ class DB
             $this->sql .= self::SPACE;
         }
         $this->sql .= self::_ELSE . self::SPACE . $this->quoted($finalResult) . self::SPACE . self::END;
-        $this->sql .= self::PC;
+        $this->sql .= self::PC  . ' `' . $conditions[0][0] . '`';
         return $this;
     }
 
