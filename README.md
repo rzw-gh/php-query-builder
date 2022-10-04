@@ -64,7 +64,7 @@ $db->table("products")->select("id", "price")->execute();
 ```
 Leave select empty to get all columns.
 ```php
-$db->table("products")->select()->execute(); // all value of columns will be returned
+$db->table("products")->select()->execute();
 ```
 <a name="block2.2"></a>
 ### INSERT: [↑](#index_block)
