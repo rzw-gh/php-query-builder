@@ -275,11 +275,9 @@ class DB
                 $string = '`' . $string . '`'; // Adds back ticks
             }
         } elseif ($type == 'value') {
-            if ($this->validateType(self::NULL, $string, self::CLEAN, true)) {
-                $string = str_replace('`', '', $string); // Removes back ticks
-                $string = $this->connectionType === self::MYSQLI ? mysqli_real_escape_string($this->connection, $string) : $string;
-                $string = "'" . $string . "'";// Adds single quotation marks
-            }
+            $string = str_replace('`', '', $string); // Removes back ticks
+            $string = $this->connectionType === self::MYSQLI ? mysqli_real_escape_string($this->connection, $string) : $string;
+            $string = "'" . $string . "'";// Adds single quotation marks
         }
         return $string;
     }
