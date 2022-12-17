@@ -94,7 +94,7 @@ class DB
     const MYSQLI = 'mysqli';
     const PDO = 'pdo';
 
-    function __construct($host, $user, $password, $database, $charset = "utf8", $connectionType = self::MYSQLI)
+    function __construct($host, $user, $password, $database, $charset = "utf8mb4", $connectionType = self::MYSQLI)
     {
         $this->host = $host;
         $this->user = $user;
@@ -260,7 +260,7 @@ class DB
         }
     }
 
-    private function clean($string, $type = 'key')
+    private function clean($string, $type = 'key', $joinOperation = false)
     {
         if ($type == 'key') {
             if (
@@ -268,11 +268,15 @@ class DB
                 ||
                 $this->validateType(self::BLANK, $string, self::CLEAN, true)
             ) {
-                $string = str_replace('`', '', $string); // Removes back ticks
+                if (!$joinOperation) {
+                    $string = str_replace('`', '', $string); // Removes back ticks
+                }
                 $string = preg_replace('/\s/', '', $string); // Removes white spaces
                 $string = str_replace("'", '', $string); // Removes single quotation marks
                 $string = str_replace('"', '', $string); // Removes double quotation marks
-                $string = '`' . $string . '`'; // Adds back ticks
+                if (!$joinOperation) {
+                    $string = '`' . $string . '`'; // Adds back ticks
+                }
             }
         } elseif ($type == 'value') {
             $string = str_replace('`', '', $string); // Removes back ticks
@@ -342,7 +346,8 @@ class DB
                     } else if (is_object($value) && !is_callable($value)) {
                         $valueSets[] = $value->toSql();
                     } else {
-                        $valueSets[] = $this->clean($value);
+                        $joinOperation = strpos($value, "`") !== false;
+                        $valueSets[] = $this->clean($value, "key", $joinOperation);
                     }
                 }
                 $columnsString = implode(', ', $valueSets);
