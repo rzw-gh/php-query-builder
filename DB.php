@@ -1,6 +1,6 @@
 <?php
-
-class DB
+namespace Core;
+class ORM
 {
     private $connection;
     private $connectionType;
@@ -629,7 +629,7 @@ class DB
             $keys = implode(', ', $this->cleanArr(array_keys($columns)));
             $values = array();
             foreach ($columns as $value) {
-                $values[] = $this->clean($value, 'value');
+                $values[] = is_null($value) ? 'null' : $this->clean($value, 'value');
             }
             $values = implode(', ', array_values($values));
             $this->sql = "INSERT INTO $this->table ($keys) VALUES ($values)";
@@ -643,7 +643,8 @@ class DB
         if ($this->validateType(self::AssociativeARR, $columns, self::UPDATE_METHOD)) {
             $valueSets = array();
             foreach ($columns as $key => $value) {
-                $valueSets[] = $this->table . '.' . $this->clean($key) . " = " . $this->clean($value, 'value');
+                $value = is_null($value) ? 'null' : $this->clean($value, 'value');
+                $valueSets[] = $this->table . '.' . $this->clean($key) . " = " . $value;
             }
             $query = implode(', ', $valueSets);
             $this->sql = "UPDATE $this->table SET $query";
