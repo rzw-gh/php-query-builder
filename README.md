@@ -34,7 +34,7 @@ $hostname = "localhost";
 $database = "test_db";
 $username = "root";
 $password = "";
-$db = new DB($hostname, $username, $password, $database);
+$db = new ORM($hostname, $username, $password, $database);
 ```
 ### Usage:
 ```php
